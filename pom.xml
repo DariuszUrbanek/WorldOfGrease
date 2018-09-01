@@ -59,14 +59,20 @@
 			<version>1.59</version>
 		</dependency>
 		<dependency>
-          <groupId>javax.validation</groupId>
-          <artifactId>validation-api</artifactId>
-        </dependency>
-       <dependency>
-          <groupId>org.hibernate</groupId>
-          <artifactId>hibernate-validator</artifactId>
-          <version>5.0.1.Final</version>
-       </dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.0.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-tools</artifactId>
+			<version>3.2.3.GA</version>
+		</dependency>
+
 	</dependencies>
 
 	<properties>
@@ -79,6 +85,42 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>hibernate3-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+
+					<components>
+						<component>
+							<name>hbm2java</name>
+							<outputDirectory>src/main/java</outputDirectory>
+							<implementation>jdbcconfiguration</implementation>
+						</component>
+					</components>
+					<componentProperties>
+						<reversestrategy>com.example.du.shop.plugin.CustomStrategy</reversestrategy>
+						<packagename>com.example.du.shop.generated</packagename>
+						<revengfile>/src/main/resources/reveng.xml</revengfile>
+						<propertyfile>/src/main/webapp/META-INF/hibernate.properties</propertyfile>
+						<ejb3>true</ejb3>
+						<java5>true</java5>
+					</componentProperties>
+				</configuration>
+
+				<dependencies>
+					<dependency>
+						<groupId>com.microsoft.sqlserver</groupId>
+						<artifactId>mssql-jdbc</artifactId>
+						<version>7.0.0.jre8</version>
+					</dependency>
+					<dependency>
+						<groupId>cglib</groupId>
+						<artifactId>cglib-nodep</artifactId>
+						<version>2.1_3</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
