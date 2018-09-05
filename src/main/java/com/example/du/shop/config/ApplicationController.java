@@ -133,6 +133,7 @@ public class ApplicationController {
 			ShopUser newShopUser = new ShopUser();
 			newShopUser.setSuLogin(form.getUsername());
 			newShopUser.setSuPassword(new SCryptPasswordEncoder().encode(form.getPassword()));
+			// FIXME
 			newShopUser.setRoles(new HashSet<Role>(Arrays.asList(roleRepository.findById("ROLE_USER").get())));
 			userService.save(newShopUser);
 

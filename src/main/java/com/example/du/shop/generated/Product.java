@@ -1,5 +1,5 @@
 package com.example.du.shop.generated;
-// Generated 02-Sep-2018 11:35:49 by Hibernate Tools 3.2.2.GA
+// Generated 05-Sep-2018 18:42:44 by Hibernate Tools 3.2.2.GA
 
 
 import java.util.HashSet;
