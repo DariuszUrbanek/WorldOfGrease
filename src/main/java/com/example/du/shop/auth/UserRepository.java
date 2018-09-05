@@ -1,10 +1,12 @@
 package com.example.du.shop.auth;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.du.shop.entity.SpringUser;
+import com.example.du.shop.generated.ShopUser;
 
-public interface UserRepository extends JpaRepository<SpringUser, String> {
+public interface UserRepository extends JpaRepository<ShopUser, String> {
 	
-	SpringUser findByUsername(String username);
+	Optional<ShopUser> findBySuLogin(String suLogin);
 }

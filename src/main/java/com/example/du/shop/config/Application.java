@@ -18,7 +18,7 @@ import org.springframework.web.servlet.view.JstlView;
 @SpringBootApplication(scanBasePackages = "com.example.du.shop.*")
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableJpaRepositories("com.example.du.shop.auth")
-@EntityScan("com.example.du.shop.entity")
+@EntityScan("com.example.du.shop.generated")
 public class Application {
 
 	@Autowired

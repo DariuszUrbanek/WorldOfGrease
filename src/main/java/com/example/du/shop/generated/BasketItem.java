@@ -1,5 +1,5 @@
 package com.example.du.shop.generated;
-// Generated 01-Sep-2018 16:53:30 by Hibernate Tools 3.2.2.GA
+// Generated 02-Sep-2018 11:35:49 by Hibernate Tools 3.2.2.GA
 
 
 import javax.persistence.Column;

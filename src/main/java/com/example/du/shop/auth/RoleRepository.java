@@ -2,9 +2,9 @@ package com.example.du.shop.auth;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.du.shop.entity.SpringRole;
+import com.example.du.shop.generated.Role;
 
-public interface RoleRepository extends JpaRepository<SpringRole, String> {
+public interface RoleRepository extends JpaRepository<Role, String> {
 	
 
 }

@@ -1,5 +1,5 @@
 package com.example.du.shop.generated;
-// Generated 01-Sep-2018 16:53:30 by Hibernate Tools 3.2.2.GA
+// Generated 02-Sep-2018 11:35:49 by Hibernate Tools 3.2.2.GA
 
 
 import java.util.HashSet;
@@ -30,12 +30,12 @@ public class Product  implements java.io.Serializable {
      private String prDescription;
      private Long prPrice;
      private Integer prStock;
-     private Set basketItems = new HashSet(0);
+     private Set<BasketItem> basketItems = new HashSet<BasketItem>(0);
 
     public Product() {
     }
 
-    public Product(String prName, String prDescription, Long prPrice, Integer prStock, Set basketItems) {
+    public Product(String prName, String prDescription, Long prPrice, Integer prStock, Set<BasketItem> basketItems) {
        this.prName = prName;
        this.prDescription = prDescription;
        this.prPrice = prPrice;
@@ -90,11 +90,11 @@ public class Product  implements java.io.Serializable {
         this.prStock = prStock;
     }
 @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="product")
-    public Set getBasketItems() {
+    public Set<BasketItem> getBasketItems() {
         return this.basketItems;
     }
     
-    public void setBasketItems(Set basketItems) {
+    public void setBasketItems(Set<BasketItem> basketItems) {
         this.basketItems = basketItems;
     }
 

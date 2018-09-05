@@ -1,6 +1,7 @@
 package com.example.du.shop.config;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,7 +29,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.du.shop.auth.RoleRepository;
 import com.example.du.shop.auth.UserDataForm;
 import com.example.du.shop.auth.UserRepository;
-import com.example.du.shop.entity.SpringUser;
+import com.example.du.shop.generated.Role;
+import com.example.du.shop.generated.ShopUser;
 
 @Controller
 public class ApplicationController {
@@ -125,14 +127,14 @@ public class ApplicationController {
 			return "register";
 		}
 		
-		Optional<SpringUser> userCheck = userService.findById(form.getUsername());
+		Optional<ShopUser> userCheck = userService.findBySuLogin(form.getUsername());
 
 		if (!userCheck.isPresent()) {
-			SpringUser newSpringUser = new SpringUser();
-			newSpringUser.username = form.getUsername();
-			newSpringUser.password = new SCryptPasswordEncoder().encode(form.getPassword());
-			newSpringUser.roles = Arrays.asList(roleRepository.findById("ROLE_USER").get());
-			userService.save(newSpringUser);
+			ShopUser newShopUser = new ShopUser();
+			newShopUser.setSuLogin(form.getUsername());
+			newShopUser.setSuPassword(new SCryptPasswordEncoder().encode(form.getPassword()));
+			newShopUser.setRoles(new HashSet<Role>(Arrays.asList(roleRepository.findById("ROLE_USER").get())));
+			userService.save(newShopUser);
 
 			return "redirect:/login/registered";
 		} else

@@ -8,33 +8,33 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.du.shop.entity.SpringUser;
+import com.example.du.shop.generated.ShopUser;
 
 public class UserPrincipal implements UserDetails {
 	private static final long serialVersionUID = -2971393542317040515L;
 
-	private SpringUser user;
+	private ShopUser user;
 
 	@Autowired
 	UserRepository userRepository;
 
-	public UserPrincipal(SpringUser user) {
+	public UserPrincipal(ShopUser user) {
 		this.user = user;
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return user.roles.stream().map(role -> new SimpleGrantedAuthority(role.name.toUpperCase())).collect(Collectors.toList());
+		return user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRlName().toUpperCase())).collect(Collectors.toList());
 	}
 
 	@Override
 	public String getPassword() {
-		return user.password;
+		return user.getSuPassword();
 	}
 
 	@Override
 	public String getUsername() {
-		return user.username;
+		return user.getSuLogin();
 	}
 
 	@Override

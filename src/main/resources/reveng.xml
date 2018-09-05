@@ -4,10 +4,14 @@
 
 <hibernate-reverse-engineering>
 	<schema-selection match-catalog="shop" match-schema="dbo"/>
-	<table catalog="shop" schema="dbo" name="product"></table>
-	<table catalog="shop" schema="dbo" name="basket"></table>
-	<table catalog="shop" schema="dbo" name="customer"></table>
-	<table catalog="shop" schema="dbo" name="address"></table>
-	<table catalog="shop" schema="dbo" name="basket_item"></table>
+
+<!-- 	<table catalog="shop" schema="dbo" name="product"></table> -->
+	<table catalog="shop" schema="dbo" name="basket">
+		<column name="bas_creation_date" type="java.time.LocalDateTime"></column>
+		<column name="bas_purchase_date" type="java.time.LocalDateTime"></column>
+	</table>
+<!-- 	<table catalog="shop" schema="dbo" name="customer"></table> -->
+<!-- 	<table catalog="shop" schema="dbo" name="address"></table> -->
+<!-- 	<table catalog="shop" schema="dbo" name="basket_item"></table> -->
 
 </hibernate-reverse-engineering>
