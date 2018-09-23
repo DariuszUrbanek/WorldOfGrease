@@ -84,7 +84,7 @@ public class RegisterAndLoginController {
 				return "redirect:/home";
 			}
 		} catch (BadCredentialsException e) {
-			//empty
+			// empty
 		}
 		return "redirect:/login/wrongPassword";
 	}
@@ -103,10 +103,9 @@ public class RegisterAndLoginController {
 		return mav;
 	}
 
-	
 	@RequestMapping(value = { "register" }, method = RequestMethod.GET)
 	public String registerGet(Model model) {
-		if(!model.containsAttribute("register"))
+		if (!model.containsAttribute("register"))
 			model.addAttribute("register", new UserDataForm());
 		return "register";
 	}
@@ -123,7 +122,7 @@ public class RegisterAndLoginController {
 			model.addAttribute("register", form);
 			return "register";
 		}
-		
+
 		Optional<ShopUser> userCheck = userService.findBySuLogin(form.getUsername());
 
 		if (!userCheck.isPresent()) {
