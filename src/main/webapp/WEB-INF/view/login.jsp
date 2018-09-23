@@ -6,7 +6,7 @@
             <html>
 
             <head>
-                <title>Spring Security Login </title>
+                <title>World of Grease: Login </title>
             </head>
 
             <body>

@@ -1,145 +1,98 @@
 package com.example.du.shop.config;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.du.shop.auth.RoleRepository;
-import com.example.du.shop.auth.UserDataForm;
-import com.example.du.shop.auth.UserRepository;
-import com.example.du.shop.generated.Role;
-import com.example.du.shop.generated.ShopUser;
+import com.example.du.shop.auth.ProductRepository;
+import com.example.du.shop.form.ProductForm;
+import com.example.du.shop.generated.Product;
 
+@Secured("ROLE_USER")
 @Controller
 public class ApplicationController {
-
+	
 	@Autowired
-	UserRepository userService;
-
-	@Autowired
-	RoleRepository roleRepository;
+	ProductRepository productRepository;
 
 	@Autowired
 	UserDetailsService userDetailsService;
 
-	@Autowired
-	DaoAuthenticationProvider authProvider;
-
-	@RequestMapping(value = { "/", "login", "login/{message}" }, method = RequestMethod.GET)
-	public String loginGet(Model model, @PathVariable(required = false) String message) {
-		if (message != null && !message.isEmpty())
-			switch (message) {
-			case "registered":
-				model.addAttribute("registeredMessage", "true");
-				break;
-			case "wrongLogin":
-				model.addAttribute("wrongLogin", "true");
-				break;
-			case "wrongPassword":
-				model.addAttribute("wrongPassword", "true");
-				break;
-			}
-
-		if (!model.containsAttribute("login"))
-			model.addAttribute("login", new UserDataForm());
-		return "login";
-	}
-
-	@RequestMapping(value = { "login" }, method = RequestMethod.POST)
-	public String loginPost(@ModelAttribute UserDataForm login, BindingResult result) {
-
-		if (result.hasErrors())
-			return "login";
-
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-				login.getUsername(), login.getPassword());
-
-		if (!userService.existsById(login.getUsername())) {
-			return "redirect:/login/wrongLogin";
+	@GetMapping("/home")
+	public ModelAndView getHome() {
+		ModelAndView mav = new ModelAndView("home");
+		for(GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
+			if("ROLE_ADMIN".equals(authority.getAuthority()))
+				mav.addObject("isAdmin","true");
 		}
-
-		try {
-			Authentication resultAuthentication = authProvider.authenticate(authentication);
-			if (resultAuthentication.isAuthenticated()) {
-				SecurityContextHolder.getContext().setAuthentication(resultAuthentication);
-				return "redirect:/employeeSearch";
-			}
-		} catch (BadCredentialsException e) {
-			//empty
-		}
-		return "redirect:/login/wrongPassword";
-	}
-
-	@RequestMapping(value = "logout", method = RequestMethod.GET)
-	public ModelAndView logoutPage(HttpServletRequest request, HttpServletResponse response) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null) {
-			new SecurityContextLogoutHandler().logout(request, response, auth);
-		}
-		ModelAndView mav = new ModelAndView();
-		Map<String, Object> model = mav.getModel();
-		model.put("user", auth.getPrincipal());
-
-		mav.setViewName("logout");
 		return mav;
 	}
-
 	
-	@RequestMapping(value = { "register" }, method = RequestMethod.GET)
-	public String registerGet(Model model) {
-		if(!model.containsAttribute("register"))
-			model.addAttribute("register", new UserDataForm());
-		return "register";
-	}
-
-	@RequestMapping(value = { "register" }, method = RequestMethod.POST)
-	public String registerPost(@ModelAttribute UserDataForm form, Model model, BindingResult result) {
-
-		if (result.hasErrors()) {
-			model.addAttribute("register", form);
-			return "register";
-		}
-
-		if (!form.getPassword().equals(form.getPasswordRepeated())) {
-			model.addAttribute("register", form);
-			return "register";
-		}
+	@GetMapping("/products")
+	public ModelAndView getProducts() {
 		
-		Optional<ShopUser> userCheck = userService.findBySuLogin(form.getUsername());
-
-		if (!userCheck.isPresent()) {
-			ShopUser newShopUser = new ShopUser();
-			newShopUser.setSuLogin(form.getUsername());
-			newShopUser.setSuPassword(new SCryptPasswordEncoder().encode(form.getPassword()));
-			// FIXME
-			newShopUser.setRoles(new HashSet<Role>(Arrays.asList(roleRepository.findById("ROLE_USER").get())));
-			userService.save(newShopUser);
-
-			return "redirect:/login/registered";
-		} else
-			return "register";
+		ModelAndView mav = new ModelAndView("products");		
+		
+		mav.addObject("list", productRepository.findAll());
+		
+		return mav;		
 	}
+	
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/addProducts")
+	public ModelAndView getAddProducts() {
+		
+		ModelAndView mav = new ModelAndView("addProducts");
+		mav.addObject("form", new ProductForm());
+		
+		return mav;		
+	}
+	
+	@Secured("ROLE_ADMIN")
+	@PostMapping("/addProducts")
+	public String postAddProducts(@ModelAttribute ProductForm productForm, BindingResult bindingResult) {
+		
+		productRepository.save(productForm.convertToEntity());
+		
+		return "redirect:/products";		
+	}
+	
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/editProducts")
+	public ModelAndView getEditProducts() {
 
+		ModelAndView mav = new ModelAndView("editProducts");
+		
+		List<ProductForm> forms = new ArrayList<>();
+		for(Product product : productRepository.findAll()) {
+			ProductForm form = new ProductForm(product);
+			forms.add(form);
+			mav.addObject(product.getPrId().toString(),form);
+		}
+		mav.addObject("forms", forms);
+		
+		return mav;		
+	}
+	
+	@Secured("ROLE_ADMIN")
+	@PostMapping("/editProducts")
+	public String postEditProducts(@ModelAttribute ProductForm productForm, BindingResult bindingResult) {
+		
+		productRepository.save(productForm.convertToEntity());
+		
+		return "redirect:/products";		
+	}
+	
 }

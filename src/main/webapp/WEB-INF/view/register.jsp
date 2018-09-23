@@ -4,7 +4,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
     <head>
-        <title>Spring Security Register</title>
+        <title>World of Grease: Register</title>
     </head>
     <body>
         <p style="font-size:20px;color:blue;font-weight:bold">Registration form:</p>

@@ -2,6 +2,7 @@ package com.example.du.shop.generated;
 // Generated 05-Sep-2018 18:42:44 by Hibernate Tools 3.2.2.GA
 
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -28,14 +29,14 @@ public class Product  implements java.io.Serializable {
      private Integer prId;
      private String prName;
      private String prDescription;
-     private Long prPrice;
+     private BigDecimal prPrice;
      private Integer prStock;
      private Set<BasketItem> basketItems = new HashSet<BasketItem>(0);
 
     public Product() {
     }
 
-    public Product(String prName, String prDescription, Long prPrice, Integer prStock, Set<BasketItem> basketItems) {
+    public Product(String prName, String prDescription, BigDecimal prPrice, Integer prStock, Set<BasketItem> basketItems) {
        this.prName = prName;
        this.prDescription = prDescription;
        this.prPrice = prPrice;
@@ -73,11 +74,11 @@ public class Product  implements java.io.Serializable {
     }
     
     @Column(name="pr_price", precision=18, scale=0)
-    public Long getPrPrice() {
+    public BigDecimal getPrPrice() {
         return this.prPrice;
     }
     
-    public void setPrPrice(Long prPrice) {
+    public void setPrPrice(BigDecimal prPrice) {
         this.prPrice = prPrice;
     }
     
